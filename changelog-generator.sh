@@ -19,3 +19,19 @@ while getopts "h?t:o:" opt; do
 		;;
 	esac
 done
+
+function show_help {
+	echo "changelog-generator: Generates a changelog based on the log for a given 
+git repository"
+	echo "usage: changelog-generator [options]"
+	echo "  -o output-file\tSets the output to be sent to output-file"
+	echo "     If ommitted, will output to stdout"
+	echo "  -t target-dir\tSets the path to the target repository"
+	echo "     If ommitted, will expect input formatted like a git log on stdin"
+}
+
+if [ -z $output_file ]; then
+	exec &3>&1
+else
+	exec &3>$output_file
+fi
