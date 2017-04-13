@@ -21,7 +21,7 @@ while getopts "h?t:o:" opt; do
 done
 
 function show_help {
-	echo "changelog-generator: Generates a changelog based on the log for a given 
+	echo "changelog-generator: Generates a changelog based on the log for a given
 git repository"
 	echo "usage: changelog-generator [options]"
 	echo "  -o output-file\tSets the output to be sent to output-file"
@@ -35,3 +35,14 @@ if [ -z $output_file ]; then
 else
 	exec &3>$output_file
 fi
+
+infile=`mktemp` || exit 1
+if [ -z $target_dir]; then
+	$infile<&0
+
+	while read line; do
+		echo $line>>$infile
+	done
+fi
+
+rm $infile
