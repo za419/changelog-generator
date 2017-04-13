@@ -48,7 +48,8 @@ else
 fi
 
 while read -r line; do
-	if [[ "$line" == commit* ]]; then true
+	if [[ "$line" == commit* ]]; then
+		echo ""
 	elif [[ "$line" == Author:* ]]; then true
 	elif [[ "$line" == Date:* ]]; then
 		echo $line | sed -ne 's/^Date: //p'
