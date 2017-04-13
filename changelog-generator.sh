@@ -37,12 +37,16 @@ else
 fi
 
 infile=`mktemp` || exit 1
-if [ -z $target_dir]; then
+if [ -z $target_dir ]; then
 	$infile<&0
 
 	while read line; do
 		echo $line>>$infile
 	done
+else
+	cd $target_dir
+	git log>$infile
+	cd ->/dev/null
 fi
 
 rm $infile
