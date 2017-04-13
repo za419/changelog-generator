@@ -47,4 +47,15 @@ else
 	cd ->/dev/null
 fi
 
+while read -r line; do
+	if [[ "$line" == "commit*" ]]; then true
+	elif [[ "$line" == "Author:*" ]]; then true
+	elif [[ "$line" == "Date:*" ]]; then true
+	elif [ -z "$line" ]; then
+		echo $line
+	else
+		echo $line
+	fi
+done < $infile
+
 rm $infile
