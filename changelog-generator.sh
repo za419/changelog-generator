@@ -30,10 +30,8 @@ git repository"
 	echo "     If ommitted, will expect input formatted like a git log on stdin"
 }
 
-if [ -z $output_file ]; then
-	exec &3>&1
-else
-	exec &3>$output_file
+if [ $output_file ]; then
+	exec >"$output_file"
 fi
 
 infile=`mktemp` || exit 1
