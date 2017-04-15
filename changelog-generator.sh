@@ -51,7 +51,7 @@ medfile=`mktemp` || (rm -f infile; exit 1)
 
 while read -r line; do
 	if [[ "$line" == commit* ]]; then
-		echo ""
+		echo $line
 	elif [[ "$line" == Author:* ]]; then true
 	elif [[ "$line" == Date:* ]]; then
 		echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
@@ -82,6 +82,11 @@ while read -r line; do
             echo '<p>'
             lastdate=$line
         fi
+    elif [[ "$line" == commit* ]]; then
+        if [[ "$lastdate" != "None" ]]; then
+            echo '</p>'
+        fi
+        echo '<p>'
     elif [[ -z "$line" ]]; then
         if $echoline; then
             if [[ "$lastdate" != "None" ]]; then
