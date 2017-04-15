@@ -47,6 +47,8 @@ else
 	cd ->/dev/null
 fi
 
+medfile=`mktemp` || (rm -f infile; exit 1)
+
 while read -r line; do
 	if [[ "$line" == commit* ]]; then
 		echo ""
@@ -60,6 +62,7 @@ while read -r line; do
 	else
 		echo $line
 	fi
-done < $infile
+done < $infile > $medfile
 
+rm $medfile
 rm $infile
