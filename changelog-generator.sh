@@ -64,7 +64,8 @@ while read -r line; do
 done < $infile > $medfile
 
 lastdate="None"
-echoline=`true`
+echoline=true
+docommit=true
 
 while read -r line; do
     if [[ "$line" == Date:* ]]; then
@@ -81,12 +82,17 @@ while read -r line; do
             echo '</h3>'
             echo '<p>'
             lastdate=$line
+            docommit=false
         fi
     elif [[ "$line" == commit* ]]; then
-        if [[ "$lastdate" != "None" ]]; then
-            echo '</p>'
+        if $docommit; then
+            if [[ "$lastdate" != "None" ]]; then
+                echo '</p>'
+            fi
+            echo '<p>'
+        else
+            docommit=true
         fi
-        echo '<p>'
     elif [[ -z "$line" ]]; then
         if $echoline; then
             if [[ "$lastdate" != "None" ]]; then
