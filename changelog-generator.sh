@@ -59,10 +59,10 @@ ignorecommit=false
 
 while read -r line; do
 	if [[ "$line" == commit* ]]; then 
-        if $ignorecommit; then ignorecommit=false
-        elif [ "$ignore_file" ]; then
+        ignorecommit=false
+        if [ "$ignore_file" ]; then
             echo $line | sed -ne 's/^commit //p' | grep -f - $ignore_file > /dev/null
-            if [ $? ]; then
+            if [ $? -eq 0 ]; then
                 ignorecommit=true
             fi
         fi
