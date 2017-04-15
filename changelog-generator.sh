@@ -72,12 +72,14 @@ while read -r line; do
             echoline=false
         else
             if [[ "$lastdate" != "None" ]]; then
+                echo '</p>'
                 echo '</div>'
             fi
             echo '<div>'
             echo '<h3>'
             echo $line | sed -ne 's/^Date: //p'
             echo '</h3>'
+            echo '<p>'
             lastdate=$line
         fi
     elif [[ -z "$line" ]]; then
@@ -89,11 +91,13 @@ while read -r line; do
             echoline=`false`
         fi
     else
-        echo '<p>'
         echo $line
-        echo '</p>'
+        echo '<br>'
     fi
 done < $medfile
+
+echo '</p>'
+echo '</div>'
 
 rm $medfile
 rm $infile
