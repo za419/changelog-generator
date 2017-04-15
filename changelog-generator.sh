@@ -69,7 +69,7 @@ while read -r line; do
     elif $ignorecommit; then true
 	elif [[ "$line" == Author:* ]]; then true
 	elif [[ "$line" == Date:* ]]; then
-        if [ !($ignorecommit) ]; then
+        if [ !$ignorecommit ]; then
             echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
                                   s/ -.*//p'
             echo "commit marker"
