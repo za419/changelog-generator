@@ -6,8 +6,9 @@ OPTIND=1
 # Variable initialization
 output_file=""
 target_dir=""
+ignore_file=""
 
-while getopts "h?t:o:" opt; do
+while getopts "h?t:o:i:" opt; do
 	case "$opt" in
 	h|\?)
 		show_help
@@ -17,6 +18,8 @@ while getopts "h?t:o:" opt; do
 		;;
 	o) output_file=$OPTARG
 		;;
+    i) ignore_file=$OPTARG
+        ;;
 	esac
 done
 
@@ -28,6 +31,9 @@ git repository"
 	echo "     If ommitted, will output to stdout"
 	echo "  -t target-dir\tSets the path to the target repository"
 	echo "     If ommitted, will expect input formatted like a git log on stdin"
+    echo "  -h ignore-file\tA path to a file of hashes to ignore"
+    echo "     Expects a file which is a collection of hashes, with one hash per line"
+    echo "     Any commit with a hash in this file will not be included in the changelog"
 }
 
 if [ $output_file ]; then
@@ -49,13 +55,25 @@ fi
 
 medfile=`mktemp` || (rm -f infile; exit 1)
 
+ignorecommit=false
+
 while read -r line; do
-	if [[ "$line" == commit* ]]; then true
-	elif [[ "$line" == Author:* ]]; then true
-	elif [[ "$line" == Date:* ]]; then
-		echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
-                              s/ -.*//p'
-        echo "commit marker"
+	if [[ "$line" == "commit "* ]]; then 
+        ignorecommit=false
+        if [ "$ignore_file" ]; then
+            echo $line | sed -ne 's/^commit //p' | grep -f - $ignore_file > /dev/null
+            if [ $? -eq 0 ]; then
+                ignorecommit=true
+            fi
+        fi
+    elif $ignorecommit; then true
+	elif [[ "$line" == "Author: "* ]]; then true
+	elif [[ "$line" == "Date: "* ]]; then
+        if [ !$ignorecommit ]; then
+            echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
+                                  s/ -.*//p'
+            echo "commit marker"
+        fi
 	elif [ -z "$line" ]; then
 		echo $line
 	else
@@ -68,7 +86,7 @@ echoline=true
 docommit=true
 
 while read -r line; do
-    if [[ "$line" == Date:* ]]; then
+    if [[ "$line" == "Date: "* ]]; then
         if [[ "$line" == $lastdate ]]; then
             echoline=false
         else
@@ -84,7 +102,7 @@ while read -r line; do
             lastdate=$line
             docommit=false
         fi
-    elif [[ "$line" == commit* ]]; then
+    elif [[ "$line" == "commit "* ]]; then
         if $docommit; then
             if [[ "$lastdate" != "None" ]]; then
                 echo '</p>'

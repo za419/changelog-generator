@@ -8,6 +8,9 @@ Usage: changelog-generator [options]
    - If omitted, will output to stdout
  - -t target-dir: The path to the target repository
    - If omitted will expect input formatted like a git log on stdin
+ - -i ignore-file: A file with hashes to ignore
+   - Expects a file which is a collection of hashes, with one hash per line
+   - Any commit with a hash in this file will not be included in the changelog.
 
 Will output as an HTML file with no styling, header/footer, or adherence to convention.
 
