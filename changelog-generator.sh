@@ -54,8 +54,7 @@ while read -r line; do
 		echo ""
 	elif [[ "$line" == Author:* ]]; then true
 	elif [[ "$line" == Date:* ]]; then
-		echo $line | sed -ne 's/^Date: //
-                              s/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
+		echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
                               s/ -.*//p'
 	elif [ -z "$line" ]; then
 		echo $line
@@ -63,6 +62,28 @@ while read -r line; do
 		echo $line
 	fi
 done < $infile > $medfile
+
+lastdate="None"
+echoline=`true`
+
+while read -r line; do
+    if [[ "$line" == Date:* ]]; then
+        if [[ "$line" == $lastdate ]]; then
+            echoline=false
+        else
+            lastdate=$line
+            echo $line | sed -ne 's/^Date: //p'
+        fi
+    elif [[ -z "$line" ]]; then
+        if $echoline; then
+            echo $line
+        else
+            echoline=`false`
+        fi
+    else
+        echo $line
+    fi
+done < $medfile > $infile
 
 rm $medfile
 rm $infile
