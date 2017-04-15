@@ -55,8 +55,17 @@ fi
 
 medfile=`mktemp` || (rm -f infile; exit 1)
 
+ignorecommit=false
+
 while read -r line; do
-	if [[ "$line" == commit* ]]; then true
+	if [[ "$line" == commit* ]]; then 
+        if $ignorecommit; then ignorecommit=false
+        elif [ "$ignore_file" ]; then
+            echo $line | sed -ne 's/^commit //p' | grep -f - $ignore_file > /dev/null
+            if $?; then
+                ignorecommit=true
+            fi
+        fi
 	elif [[ "$line" == Author:* ]]; then true
 	elif [[ "$line" == Date:* ]]; then
 		echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
