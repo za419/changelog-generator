@@ -62,7 +62,7 @@ while read -r line; do
         if $ignorecommit; then ignorecommit=false
         elif [ "$ignore_file" ]; then
             echo $line | sed -ne 's/^commit //p' | grep -f - $ignore_file > /dev/null
-            if $?; then
+            if [ $? ]; then
                 ignorecommit=true
             fi
         fi
