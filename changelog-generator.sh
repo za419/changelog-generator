@@ -6,8 +6,9 @@ OPTIND=1
 # Variable initialization
 output_file=""
 target_dir=""
+ignore_file=""
 
-while getopts "h?t:o:" opt; do
+while getopts "h?t:o:i:" opt; do
 	case "$opt" in
 	h|\?)
 		show_help
@@ -17,6 +18,8 @@ while getopts "h?t:o:" opt; do
 		;;
 	o) output_file=$OPTARG
 		;;
+    i) ignore_file=$OPTARG
+        ;;
 	esac
 done
 
