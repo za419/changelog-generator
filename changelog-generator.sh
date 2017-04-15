@@ -58,7 +58,7 @@ medfile=`mktemp` || (rm -f infile; exit 1)
 ignorecommit=false
 
 while read -r line; do
-	if [[ "$line" == commit* ]]; then 
+	if [[ "$line" == "commit "* ]]; then 
         ignorecommit=false
         if [ "$ignore_file" ]; then
             echo $line | sed -ne 's/^commit //p' | grep -f - $ignore_file > /dev/null
@@ -67,8 +67,8 @@ while read -r line; do
             fi
         fi
     elif $ignorecommit; then true
-	elif [[ "$line" == Author:* ]]; then true
-	elif [[ "$line" == Date:* ]]; then
+	elif [[ "$line" == "Author: "* ]]; then true
+	elif [[ "$line" == "Date: "* ]]; then
         if [ !$ignorecommit ]; then
             echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
                                   s/ -.*//p'
@@ -86,7 +86,7 @@ echoline=true
 docommit=true
 
 while read -r line; do
-    if [[ "$line" == Date:* ]]; then
+    if [[ "$line" == "Date: "* ]]; then
         if [[ "$line" == $lastdate ]]; then
             echoline=false
         else
@@ -102,7 +102,7 @@ while read -r line; do
             lastdate=$line
             docommit=false
         fi
-    elif [[ "$line" == commit* ]]; then
+    elif [[ "$line" == "commit "* ]]; then
         if $docommit; then
             if [[ "$lastdate" != "None" ]]; then
                 echo '</p>'
