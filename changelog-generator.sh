@@ -31,6 +31,9 @@ git repository"
 	echo "     If ommitted, will output to stdout"
 	echo "  -t target-dir\tSets the path to the target repository"
 	echo "     If ommitted, will expect input formatted like a git log on stdin"
+    echo "  -h ignore-file\tA path to a file of hashes to ignore"
+    echo "     Expects a file which is a collection of hashes, with one hash per line"
+    echo "     Any commit with a hash in this file will not be included in the changelog"
 }
 
 if [ $output_file ]; then
