@@ -52,7 +52,8 @@ while read -r line; do
 		echo ""
 	elif [[ "$line" == Author:* ]]; then true
 	elif [[ "$line" == Date:* ]]; then
-		echo $line | sed -ne 's/^Date: //p' | sed -ne 's/ -.*//p'
+		echo $line | sed -ne 's/^Date: //p' | sed -ne \
+'s/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //p' | sed -ne 's/ -.*//p'
 	elif [ -z "$line" ]; then
 		echo $line
 	else
