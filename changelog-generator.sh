@@ -7,8 +7,9 @@ OPTIND=1
 output_file=""
 target_dir=""
 ignore_file=""
+titles_only=false
 
-while getopts "h?t:o:i:" opt; do
+while getopts "h?t:o:i:s" opt; do
 	case "$opt" in
 	h|\?)
 		show_help
@@ -19,6 +20,8 @@ while getopts "h?t:o:i:" opt; do
 	o) output_file=$OPTARG
 		;;
     i) ignore_file=$OPTARG
+        ;;
+    s) titles_only=true
         ;;
 	esac
 done
@@ -34,6 +37,8 @@ git repository"
     echo "  -h ignore-file\tA path to a file of hashes to ignore"
     echo "     Expects a file which is a collection of hashes, with one hash per line"
     echo "     Any commit with a hash in this file will not be included in the changelog"
+    echo "  -s shorten\tIgnored if target-dir is not set."
+    echo "     Only adds the titles of commits to the changelog"
 }
 
 if [ $output_file ]; then
@@ -49,7 +54,11 @@ if [ -z $target_dir ]; then
 	done
 else
 	cd $target_dir
-	git log>$infile
+    if $titles_only; then
+        git log --pretty=format:"commit %H%nDate: %cd%n%s%n">$infile
+    else
+        git log>$infile
+    fi
 	cd ->/dev/null
 fi
 
