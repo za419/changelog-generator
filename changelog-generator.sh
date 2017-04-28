@@ -77,6 +77,7 @@ while read -r line; do
         fi
     elif $ignorecommit; then true
 	elif [[ "$line" == "Author: "* ]]; then true
+    elif [[ "$line" == "Merge: *"]]; then true
 	elif [[ "$line" == "Date: "* ]]; then
         if [ !$ignorecommit ]; then
             echo $line | sed -ne 's/[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} //
