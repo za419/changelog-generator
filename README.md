@@ -10,7 +10,13 @@ Usage: changelog-generator [options]
    - If omitted will expect input formatted like a git log on stdin
  - -i ignore-file: A file with hashes to ignore
    - Expects a file which is a collection of hashes, with one hash per line
-   - Any commit with a hash in this file will not be included in the changelog.
+   - Any commit with a hash in this file will not be included in the changelog
+ - -s shorten: Only adds the titles of commits to the changelog
+   - Ignored if target-dir is not set
+ - -m merges: Include merge commits
+   - By default, merge commits are not added to the changelog
+   - Use this flag to include merge commits
+   - Ignored if target-dir is not set
 
 Will output as an HTML file with no styling, header/footer, or adherence to convention.
 
