@@ -63,9 +63,9 @@ else
 	cd $target_dir
     if $titles_only; then
         if $include_merges; then
-            git log --no-max-parents --pretty=format:"commit %H%nDate: %cd%n%s%n">$infile
+            git log --no-max-parents --pretty=format:"commit %H%nDate: %cd%n%s">$infile
         else
-            git log --no-merges --pretty=format:"commit %H%nDate: %cd%n%s%n">$infile
+            git log --no-merges --pretty=format:"commit %H%nDate: %cd%n%s">$infile
         fi
     else
         if $include_merges; then
