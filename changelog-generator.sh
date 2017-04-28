@@ -8,8 +8,9 @@ output_file=""
 target_dir=""
 ignore_file=""
 titles_only=false
+include_merges=false
 
-while getopts "h?t:o:i:s" opt; do
+while getopts "h?t:o:i:sm" opt; do
 	case "$opt" in
 	h|\?)
 		show_help
@@ -22,6 +23,8 @@ while getopts "h?t:o:i:s" opt; do
     i) ignore_file=$OPTARG
         ;;
     s) titles_only=true
+        ;;
+    m) include_merges=true
         ;;
 	esac
 done
@@ -39,6 +42,10 @@ git repository"
     echo "     Any commit with a hash in this file will not be included in the changelog"
     echo "  -s shorten\tIgnored if target-dir is not set."
     echo "     Only adds the titles of commits to the changelog"
+    echo "  -m merges\tInclude merge commits"
+    echo "     By default, merge commits are not added to the changelog."
+    echo "     Use this flag to include merge commits."
+    echo "     Ignored if target-dir is not set."
 }
 
 if [ $output_file ]; then
@@ -55,9 +62,17 @@ if [ -z $target_dir ]; then
 else
 	cd $target_dir
     if $titles_only; then
-        git log --pretty=format:"commit %H%nDate: %cd%n%s%n">$infile
+        if $include_merges; then
+            git log --no-max-parents --pretty=format:"commit %H%nDate: %cd%n%s%n">$infile
+        else
+            git log --no-merges --pretty=format:"commit %H%nDate: %cd%n%s%n">$infile
+        fi
     else
-        git log>$infile
+        if $include_merges; then
+            git log --no-max-parents>$infile
+        else
+            git log --no-merges>$infile
+        fi
     fi
 	cd ->/dev/null
 fi
