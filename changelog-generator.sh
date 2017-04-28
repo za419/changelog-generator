@@ -40,12 +40,12 @@ git repository"
     echo "  -i ignore-file\tA path to a file of hashes to ignore"
     echo "     Expects a file which is a collection of hashes, with one hash per line"
     echo "     Any commit with a hash in this file will not be included in the changelog"
-    echo "  -s shorten\tIgnored if target-dir is not set."
-    echo "     Only adds the titles of commits to the changelog"
+    echo "  -s shorten\tOnly adds the titles of commits to the changelog"
+    echo "     Ignored if target-dir is not set"
     echo "  -m merges\tInclude merge commits"
-    echo "     By default, merge commits are not added to the changelog."
-    echo "     Use this flag to include merge commits."
-    echo "     Ignored if target-dir is not set."
+    echo "     By default, merge commits are not added to the changelog"
+    echo "     Use this flag to include merge commits"
+    echo "     Ignored if target-dir is not set"
 }
 
 if [ $output_file ]; then
